@@ -30,9 +30,17 @@ def terminate():
     sys.exit()
 
 
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        # print(os.listdir(os.path.join(sys._MEIPASS, 'data')))
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
-    image = pg.image.load(fullname).convert()
+    # image = pg.image.load(fullname).convert()
+    image = pg.image.load(resource_path(fullname)).convert()
     if colorkey is not None:
         if colorkey == -1:
             colorkey = image.get_at((0, 0))
@@ -379,7 +387,8 @@ def intro(n):
 
     fon = pg.transform.scale(load_image('intro.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
-    font = pg.font.Font(None, 30)
+    # font = pg.font.Font(None, 30)
+    font = pg.font.SysFont('arial', 30)
     text_coord = 50
     for line in intro_text:
         string_rendered = font.render(line, 1, c1)
